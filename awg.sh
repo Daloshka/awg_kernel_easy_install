@@ -63,7 +63,7 @@ if [ ! -f /opt/awg/wg0.conf ]; then
   mkdir -p /opt/awg
   cat <<EOF > /opt/awg/wg0.conf
 [Interface]
-PrivateKey = ADoqs+L9vZXOhj69a+9jhNTVjwSYyoJjkdvuL7BTeGo=
+PrivateKey = yOsjYUjLcJrtFulZXS5cPnKjNnB4+r/7MzF8MNVKx2o=
 Address = 10.8.1.1/24
 ListenPort = 56789
 Jc = 7
