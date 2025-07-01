@@ -3,6 +3,10 @@ set -e
 
 chmod +x /opt/awg.sh
 
+# 🧠 Определяем основной сетевой интерфейс
+MAIN_IFACE=$(ip -4 -j -o ro get 5.5.5.5 | jq -r '.[0].dev')
+echo "🌐 Основной интерфейс: $MAIN_IFACE"
+
 # 5) Создаём и включаем службу для автозапуска /opt/awg.sh
 if [ ! -f /etc/systemd/system/awg-start.service ]; then
   cat <<EOF > /etc/systemd/system/awg-start.service
@@ -101,8 +105,8 @@ if ! command -v awg-quick &>/dev/null; then
   nft add chain ip filter input { type filter hook input priority 0 \; }
   nft add table ip nat
   nft add chain ip nat postrouting { type nat hook postrouting priority 100 \; }
-  nft add rule ip filter input udp dport 56789 iif ens3 accept
-  nft add rule ip nat postrouting iif wg0 oif ens3 masquerade
+  nft add rule ip filter input udp dport 56789 iif $MAIN_IFACE accept
+  nft add rule ip nat postrouting iif wg0 oif $MAIN_IFACE masquerade
 
   nft list ruleset > /etc/nftables.conf
   systemctl enable nftables
